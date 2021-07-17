@@ -3,30 +3,43 @@ import java.util.List;
 
 public class ShoppingCart {
 
-    private List<Product> productList;
-    private double totalPrice;
+    private List<Product> productList = new ArrayList<>();
+    private IOffer offer;
 
-    public ShoppingCart(List<Product> productList, double totalPrice) {
-        this.productList = new ArrayList<Product>();
-        this.totalPrice = totalPrice;
-    }
 
-    public ShoppingCart() {
-    }
-
-    public void addProduct(Product p) {
-        productList.add(p);
-    }
-
-    public int getTotalProducts() {
+    public int getProductCount() {
         return productList.size();
     }
 
-    public double getTotalPrice() {
-        double total = 0;
-        for (Product product : productList){
-            total += product.getPrice();
+    public void addProduct(Product p) {
+        if (offer != null){
+            offer.applyOffer(p); // apply offer
         }
-        return total;
+        productList.add(p);
+    }
+
+    public double getTotalPrice() {
+        double totalPrice = 0;
+        if (productList.size() > 0){
+            for(Product product : productList){
+                totalPrice += product.getPrice();
+            }
+        }
+        return totalPrice;
+    }
+
+    public Product getProductByName(String name) {
+        if (productList.size() > 0){
+            for (Product product : productList){
+                if (product.getName().equals(name)){
+                    return product;
+                }
+            }
+        }
+        return null;
+    }
+
+    public void setOffer(IOffer offer) {
+        this.offer = offer;
     }
 }
